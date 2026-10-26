@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Banner</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400..600&display=block" rel="stylesheet">
+<style>
+  /*
+   * THE SWATCH BOOK. Every project on praduansaha.com carries its own colour
+   * token, so the colour here is the work's, not decoration: a printer's fan
+   * deck of those tokens, pivoting on the flame "P", with the crop marks and
+   * colour bar a press sheet carries. One composition, two grounds.
+   */
+  :root {
+    --ground: #0d0d10; --ink: #f7f0e4; --muted: #a09689; --faint: #6f675b;
+    --line: rgba(247, 240, 228, 0.14); --chip: #f4ecdf; --flame: #fb7b20;
+  }
+  :root[data-theme="light"] {
+    --ground: #f4ecdf; --ink: #0d0d10; --muted: #5d564c; --faint: #9a8f80;
+    --line: rgba(13, 13, 16, 0.16); --chip: #fffaf1; --flame: #e9650f;
+  }
+  html, body { margin: 0; background: transparent; }
+  .card {
+    position: relative; width: 800px; height: 340px; box-sizing: border-box; overflow: hidden;
+    border-radius: 22px; background: var(--ground); border: 1px solid var(--line); color: var(--ink);
+    font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  /* A wash of every chip's colour behind the fan, so the deck reads as lit. */
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(260px 220px at 560px 120px, rgba(127, 184, 255, 0.20), transparent 70%),
+      radial-gradient(240px 200px at 470px 250px, rgba(62, 207, 122, 0.16), transparent 70%),
+      radial-gradient(300px 240px at 760px 300px, rgba(251, 123, 32, 0.26), transparent 70%);
+  }
+  :root[data-theme="light"] .glow { opacity: 0.8; }
+  .grain {
+    position: absolute; inset: 0; opacity: 0.09; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  /* Crop marks, the four corners of a press sheet. */
+  .crop { position: absolute; width: 14px; height: 14px; border-color: var(--faint); border-style: solid; opacity: 0.8; }
+  .crop.tl { left: 16px; top: 16px; border-width: 1px 0 0 1px; }
+  .crop.tr { right: 16px; top: 16px; border-width: 1px 1px 0 0; }
+  .crop.bl { left: 16px; bottom: 16px; border-width: 0 0 1px 1px; }
+  .crop.br { right: 16px; bottom: 16px; border-width: 0 1px 1px 0; }
+
+  .copy { position: absolute; left: 44px; top: 40px; width: 360px; }
+  .eyebrow {
+    display: flex; align-items: center; gap: 9px; font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  }
+  .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--flame);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--flame) 22%, transparent); }
+  h1 {
+    margin: 12px 0 0; font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 700; font-size: 92px; line-height: 0.86; letter-spacing: -0.025em;
+    font-variation-settings: "wdth" 75, "opsz" 96;
+  }
+  h1 span { display: block; }
+  /* The surname takes the flame, end to end, the way the logo does. */
+  h1 .last {
+    background: linear-gradient(100deg, #f8b838 0%, #fb7b20 45%, #f03e17 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede { margin: 18px 0 0; font-size: 15px; line-height: 1.5; color: var(--muted); max-width: 340px; }
+  .lede b { color: var(--ink); font-weight: 500; }
+
+  /* The printer's colour bar: one patch per chip, then the registration mark. */
+  .bar { position: absolute; left: 44px; bottom: 30px; display: flex; align-items: center; gap: 0; }
+  .bar span { width: 15px; height: 15px; }
+  .bar .reg { width: 15px; height: 15px; margin-left: 10px; position: relative; }
+  .bar .reg::before, .bar .reg::after { content: ""; position: absolute; background: var(--ink); }
+  .bar .reg::before { left: 7px; top: 0; width: 1px; height: 15px; }
+  .bar .reg::after { top: 7px; left: 0; height: 1px; width: 15px; }
+  .bar .reg i { position: absolute; inset: 3px; border: 1px solid var(--ink); border-radius: 50%; }
+  .bar em {
+    margin-left: 14px; font-style: normal; font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--ink);
+  }
+  .bar em b { color: var(--flame); font-weight: 600; }
+
+  /* The fan. Each chip pivots on its own bottom-centre, which is the rivet. */
+  .fan { position: absolute; left: 676px; top: 304px; width: 0; height: 0; }
+  .chip {
+    position: absolute; left: -23px; bottom: 0; width: 46px; height: 256px;
+    transform-origin: 23px 256px; border-radius: 7px; background: var(--chip);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05), -6px 8px 18px -8px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+  .chip .ink {
+    position: absolute; left: 0; right: 0; top: 0; height: 146px; background: var(--c);
+  }
+  /* The swatch's own name, set along it the way a fan deck prints it. */
+  .chip .name {
+    position: absolute; left: 0; right: 9px; top: 10px; height: 128px;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    display: flex; align-items: center; justify-content: flex-end; gap: 7px;
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(13, 13, 16, 0.86);
+  }
+  .chip .name small { font-size: 8.5px; font-weight: 500; letter-spacing: 0.06em; opacity: 0.7; }
+  .chip .rule { position: absolute; left: 9px; right: 9px; height: 1px; background: rgba(13,13,16,0.12); }
+  .rivet {
+    position: absolute; z-index: 30; left: 652px; top: 280px; width: 48px; height: 48px; border-radius: 13px;
+    box-shadow: 0 0 0 4px var(--ground), 0 10px 24px -6px rgba(0,0,0,0.7);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="glow"></div>
+    <div class="grain"></div>
+    <i class="crop tl"></i><i class="crop tr"></i><i class="crop bl"></i><i class="crop br"></i>
+    <div class="copy">
+      <div class="eyebrow"><i></i>Product designer · Design + front-end</div>
+      <h1><span>Praduan</span><span class="last">Saha</span></h1>
+      <p class="lede">I design the kind of software <b>people have to trust without thinking about it.</b></p>
+    </div>
+    <div class="bar" id="bar"></div>
+    <div class="fan" id="fan"></div>
+    <img class="rivet" src="img/mark.png" alt="">
+  </div>
+  <script>
+    document.documentElement.dataset.theme = new URLSearchParams(location.search).get("theme") || "dark";
+    // Each project's accent, as praduansaha.com sets it, in hue order round the fan.
+    const SW = [
+      ["Graphics", "#F26A3D"], ["Spendee", "#A1A329"], ["OmniStock", "#C6FF3D"],
+      ["InsightsTap", "#3ECF7A"], ["Meridian", "#7D9B8E"], ["Nukkad", "#22E0C8"],
+      ["Keel", "#3FB0C4"], ["Baseweight", "#B3E7EE"], ["CareBridge", "#7FB8FF"], ["Decathlon", "#0C8DE9"],
+    ];
+    const fan = document.getElementById("fan"), bar = document.getElementById("bar");
+    const A0 = -74, STEP = 10.2;
+    SW.forEach(([name, hex], i) => {
+      const c = document.createElement("div");
+      c.className = "chip";
+      c.style.setProperty("--c", hex);
+      c.style.transform = `rotate(${A0 + i * STEP}deg)`;
+      c.style.zIndex = i + 1;
+      c.innerHTML = `<div class="ink"></div><div class="name">${name}<small>${hex}</small></div>` +
+        [162, 178, 194, 210].map((y) => `<div class="rule" style="top:${y}px"></div>`).join("");
+      fan.appendChild(c);
+      const p = document.createElement("span"); p.style.background = hex; bar.appendChild(p);
+    });
+    bar.insertAdjacentHTML("beforeend", `<span class="reg"><i></i></span><em><b>praduansaha.com</b> · Kolkata, IN</em>`);
+  </script>
+</body>
+</html>

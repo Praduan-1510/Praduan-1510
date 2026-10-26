@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Section</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400..600&display=block" rel="stylesheet">
+<style>
+  /* A section tab from the same swatch book: one project colour as the whole
+     field, its number, its name, and the chip label a fan deck prints. */
+  :root { --ink: #0d0d10; }
+  html, body { margin: 0; background: transparent; }
+  .tab {
+    position: relative; width: 800px; height: var(--h, 116px); box-sizing: border-box; overflow: hidden;
+    border-radius: 18px; color: var(--ink); background: var(--field);
+    font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .tab::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(120% 140% at 0% 0%, rgba(255,255,255,0.28), transparent 55%),
+      radial-gradient(90% 120% at 100% 100%, rgba(0,0,0,0.16), transparent 60%);
+  }
+  .grain {
+    position: absolute; inset: 0; opacity: 0.16; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  /* Halftone, fading in from the right like an overprinted screen. */
+  .dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(13,13,16,0.22) 1.3px, transparent 1.8px);
+    background-size: 11px 11px;
+    -webkit-mask-image: linear-gradient(100deg, transparent 52%, #000 100%);
+  }
+  .crop { position: absolute; width: 11px; height: 11px; border: solid rgba(13,13,16,0.5); }
+  .crop.tl { left: 12px; top: 12px; border-width: 1px 0 0 1px; }
+  .crop.br { right: 12px; bottom: 12px; border-width: 0 1px 1px 0; }
+  .head { position: absolute; left: 34px; top: 0; height: 116px; display: flex; align-items: center; gap: 18px; }
+  .num {
+    font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 64px; line-height: 1;
+    font-variation-settings: "wdth" 75, "opsz" 96; color: transparent;
+    -webkit-text-stroke: 1.6px var(--ink); letter-spacing: -0.02em;
+  }
+  h2 {
+    margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 54px;
+    line-height: 1; letter-spacing: -0.02em; font-variation-settings: "wdth" 75, "opsz" 96;
+  }
+  /* The chip label, bottom-right: what the colour is and where it leads. */
+  .label {
+    position: absolute; right: 34px; top: 0; height: 116px; display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-end; gap: 5px; text-align: right;
+  }
+  .label .k { font-size: 9.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.72; }
+  .label .v {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+    background: rgba(13,13,16,0.9); color: #f7f0e4; font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em;
+  }
+  .label .v i { width: 7px; height: 7px; border-radius: 50%; background: var(--dot); }
+
+  /* Toolkit: the tab grows a token sheet of pills under its title. */
+  .tokens { position: absolute; left: 34px; right: 34px; top: 112px; display: grid; gap: 12px; }
+  .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .row b {
+    width: 64px; font-size: 9.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 9px; border-radius: 999px;
+    border: 1.2px solid rgba(13,13,16,0.78); background: rgba(255,255,255,0.22);
+    font-size: 12.5px; font-weight: 500;
+  }
+  .pill i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(13,13,16,0.25); }
+</style>
+</head>
+<body>
+<div class="tab" id="tab"></div>
+<script>
+  const S = {
+    work: { n: "01", title: "Selected work", field: "linear-gradient(100deg, #f8b838 0%, #fb7b20 46%, #f03e17 100%)",
+            k: "Flame · #FB7B20", v: "praduansaha.com/work", dot: "#fb7b20" },
+    github: { n: "02", title: "Here on GitHub", field: "#7FB8FF",
+              k: "Azure · #7FB8FF", v: "github.com/Praduan-1510", dot: "#7FB8FF" },
+    toolkit: { n: "03", title: "Toolkit", field: "#C6FF3D", h: "214px",
+               k: "Hi-vis · #C6FF3D", v: "Design + front-end", dot: "#C6FF3D" },
+  };
+  const s = S[new URLSearchParams(location.search).get("s") || "work"];
+  const tab = document.getElementById("tab");
+  tab.style.setProperty("--field", s.field);
+  tab.style.setProperty("--dot", s.dot);
+  if (s.h) tab.style.setProperty("--h", s.h);
+  // Swatch colours for the pills: the projects' own tokens again.
+  const C = ["#F26A3D", "#22E0C8", "#7FB8FF", "#3ECF7A", "#0C8DE9", "#A1A329", "#3FB0C4", "#7D9B8E", "#B3E7EE", "#F26A3D", "#22E0C8"];
+  const pills = (items, off) => items.map((t, i) => `<span class="pill" style="--c:${C[(i + off) % C.length]}"><i></i>${t}</span>`).join("");
+  tab.innerHTML = `<div class="grain"></div><div class="dots"></div><i class="crop tl"></i><i class="crop br"></i>
+    <div class="head"><span class="num">${s.n}</span><h2>${s.title}</h2></div>
+    <div class="label"><span class="k">${s.k}</span><span class="v"><i></i>${s.v}</span></div>` +
+    (s.h ? `<div class="tokens">
+      <div class="row"><b>Design</b>${pills(["Figma", "Design tokens", "Component libraries", "Accessibility", "Prototypes in code"], 0)}</div>
+      <div class="row"><b>Build</b>${pills(["React", "Next.js", "TypeScript", "Tailwind CSS", "GSAP", "Motion"], 5)}</div>
+    </div>` : "");
+</script>
+</body>
+</html>

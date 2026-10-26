@@ -20,7 +20,7 @@ shot "banner.html?theme=dark" 800,340 ../assets/banner-dark.png
 shot "banner.html?theme=light" 800,340 ../assets/banner-light.png
 shot "section.html?s=work" 800,116 ../assets/section-work.png
 shot "section.html?s=github" 800,116 ../assets/section-github.png
-shot "section.html?s=toolkit" 800,214 ../assets/section-toolkit.png
+shot "section.html?s=toolkit" 800,250 ../assets/section-toolkit.png
 for p in insightstap keel carebridge graphics nukkad meridian; do
   shot "card.html?p=$p" 400,380 "../assets/card-$p.png"
 done
